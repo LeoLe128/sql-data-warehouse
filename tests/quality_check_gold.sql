@@ -35,7 +35,7 @@ GROUP BY product_key
 HAVING COUNT(*) > 1;
 
 -- Checking 'gold.fact_sales'
--- Check the data model connectivity between fact and dimensions
+--check if all dimension tables can sucessfully join to the fact table
 SELECT * 
 FROM gold.fact_sales f
 LEFT JOIN gold.dim_customers c
