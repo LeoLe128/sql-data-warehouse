@@ -20,8 +20,22 @@ This project involves:
 2. **ETL Pipelines**: Extracting, transforming, and loading data from source systems into the warehouse.
 3. **Data Modeling**: Developing fact and dimension tables optimized for analytical queries.
 4. **Analytics & Reporting**: Creating SQL-based reports and dashboards for actionable insights.
----
 
+## Data Sources
+
+The EDW currently integrates data from the following operational systems:
+* **CRM System:** Salesforce (customer details, sales opportunities)
+* **ERP System:** SAP (financial transactions, inventory, product catalog)
+---
+## Data Model & Schema
+
+The EDW follows a Star Schema dimensional modeling approach, organizing data into easily queryable facts and dimensions.
+
+**Key Schema Areas:**
+** Conformed dimensions and fact tables optimized for reporting and analytics.
+    * `dim_customers`: Customer master data.
+    * `dim_products`: Product catalog details.
+    * `fact_sales`: Transactional sales data (linked to `dim_customers`, `dim_products`).
 ## Project Requirements
 
 ### Building the Data Warehouse
