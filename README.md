@@ -32,10 +32,10 @@ The EDW currently integrates data from the following operational systems:
 The EDW follows a Star Schema dimensional modeling approach, organizing data into easily queryable facts and dimensions.
 
 **Key Schema Areas:**
-* Conformed dimensions and fact tables optimized for reporting and analytics.
-    * `dim_customers`: Customer master data.
-    * `dim_products`: Product catalog details.
-    * `fact_sales`: Transactional sales data (linked to `dim_customers`, `dim_products`).
+Conformed dimensions and fact tables optimized for reporting and analytics.
+ * `dim_customers`: Customer master data.
+ * `dim_products`: Product catalog details.
+ * `fact_sales`: Transactional sales data (linked to `dim_customers`, `dim_products`).
 ## Project Requirements
 
 ### Building the Data Warehouse
