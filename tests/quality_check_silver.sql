@@ -29,22 +29,22 @@ HAVING COUNT(*) > 1;
 SELECT 
 	cst_firstname,
 	cst_lastname
-FROM bronze.crm_cust_info;
+FROM silver.crm_cust_info;
 
 SELECT 
 	cst_firstname,
 	cst_lastname
-FROM bronze.crm_cust_info
+FROM silver.crm_cust_info
 WHERE cst_firstname LIKE ' %' OR cst_lastname LIKE ' %';
 
 --check for the categorical data
 SELECT DISTINCT 
 	cst_gndr
-FROM bronze.crm_cust_info
+FROM silver.crm_cust_info
 
 SELECT DISTINCT 
 	cst_marital_status
-FROM bronze.crm_cust_info
+FROM silver.crm_cust_info
 
 --not align with the rule: only store meaningful values 
 --haven't established this rule yet
@@ -103,14 +103,14 @@ SELECT * FROM silver.crm_prd_info
 --Check for invalid dates
 --negative values
 SELECT NULLIF(sls_order_dt, 0) AS sls_order_dt
-FROM bronze.crm_sales_details
+FROM silver.crm_sales_details
 WHERE sls_order_dt <= 0 
 OR LEN(sls_order_dt) !=8
 OR sls_order_dt > 20500101
 OR sls_order_dt < 19000101 -- 19 invalid values
 
 SELECT NULLIF(sls_due_dt, 0) AS sls_due_dt
-FROM bronze.crm_sales_details
+FROM silver.crm_sales_details
 WHERE sls_due_dt <= 0 
 OR LEN(sls_due_dt) !=8
 OR sls_due_dt > 20500101
@@ -118,13 +118,13 @@ OR sls_due_dt < 19000101 --okay
 
 --check the valid order of dates
 SELECT *
-FROM bronze.crm_sales_details
+FROM silver.crm_sales_details
 WHERE sls_ship_dt NOT BETWEEN sls_order_dt AND sls_due_dt --okay
 
 --check sales data
 -- Expect: sales/revenue = quantity*price | No 0 or negative values | No NULL values
 SELECT sls_sales, sls_quantity, sls_price
-FROM bronze.crm_sales_details
+FROM silver.crm_sales_details
 WHERE  
 sls_sales != (sls_quantity*sls_price)
 OR sls_sales IS NULL
@@ -149,7 +149,7 @@ SELECT
 		WHEN sls_price < 0 THEN ABS(sls_price)
 	ELSE sls_price
 	END AS sls_price
-FROM bronze.crm_sales_details
+FROM silver.crm_sales_details
 WHERE  
 sls_sales != (sls_quantity*sls_price)
 OR sls_sales IS NULL
@@ -164,12 +164,12 @@ ORDER BY sls_sales, sls_quantity, sls_price;
 --check valid cid
 --expect: no null | no duplicate
 SELECT cid, COUNT(cid)
-FROM bronze.erp_cust_az12
+FROM silver.erp_cust_az12
 GROUP BY cid
 HAVING COUNT(cid) > 1 OR cid IS NULL 
 
 --check if cid is usable to link to cust_info table
-SELECT * FROM bronze.erp_cust_az12;
+SELECT * FROM silver.erp_cust_az12;
 SELECT cst_id, cst_key FROM silver.crm_cust_info
 --old data has NAS prefic in the cid
 
@@ -178,11 +178,11 @@ SELECT
 		WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid, 4, LEN(cid))
 		ELSE cid
 	END AS cid
-FROM bronze.erp_cust_az12
+FROM silver.erp_cust_az12
 
 -- check out-of-range or null bdates
 SELECT DISTINCT bdate
-FROM bronze.erp_cust_az12
+FROM silver.erp_cust_az12
 WHERE bdate IS NULL 
 OR bdate < '1925-01-01' 
 OR bdate > GETDATE()
@@ -195,13 +195,13 @@ SELECT DISTINCT gen,
 		WHEN gen IS NULL OR gen = '' THEN 'N/A'
 		ELSE gen
 	END AS gen
-FROM bronze.erp_cust_az12
+FROM silver.erp_cust_az12
 
 --ERP_LOC_A101
 SELECT * FROM bronze.erp_loc_a101
 --check null / duplicate cid
 SELECT cid, COUNT(cid)
-FROM bronze.erp_loc_a101
+FROM silver.erp_loc_a101
 GROUP BY cid
 HAVING COUNT(cid) > 1 
 
@@ -211,11 +211,11 @@ SELECT cst_key FROM silver.crm_cust_info
 /* have '-' in the middle of cid*/
 SELECT 
 	REPLACE(cid, '-', '') AS cid
-FROM bronze.erp_loc_a101
+FROM silver.erp_loc_a101
 
 --check data standardization and consistency in cntry column
 SELECT DISTINCT cntry
-FROM bronze.erp_loc_a101
+FROM silver.erp_loc_a101
 ORDER BY cntry
 
 SELECT DISTINCT
@@ -226,7 +226,7 @@ SELECT DISTINCT
 		WHEN cntry IS NULL OR cntry = '' THEN 'N/A'
 		ELSE cntry
 	END AS cntry
-FROM bronze.erp_loc_a101
+FROM silver.erp_loc_a101
 
 --erp_px_cat_g1v2
 --check valid id
@@ -234,23 +234,23 @@ FROM bronze.erp_loc_a101
 - Compatible with cat_id of crm_prd_info
 - No null, no duplicate*/
 SELECT id, COUNT(id) 
-FROM bronze.erp_px_cat_g1v2
+FROM silver.erp_px_cat_g1v2
 GROUP BY id
 HAVING COUNT(id) > 1 AND id IS NULL
 
 --check unwanted spaces
 SELECT *
-FROM bronze.erp_px_cat_g1v2
+FROM silver.erp_px_cat_g1v2
 WHERE cat LIKE ' %'
 OR subcat LIKE ' %'  
 OR maintenance LIKE ' %'  
 
 --check data standardization and consistency
 SELECT DISTINCT cat
-FROM bronze.erp_px_cat_g1v2 
+FROM silver.erp_px_cat_g1v2 
  
 SELECT DISTINCT subcat
-FROM bronze.erp_px_cat_g1v2 
+FROM silver.erp_px_cat_g1v2 
 
 SELECT DISTINCT maintenance
-FROM bronze.erp_px_cat_g1v2 
+FROM silver.erp_px_cat_g1v2 
