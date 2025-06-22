@@ -24,8 +24,8 @@ This project involves:
 ## Data Sources
 
 The EDW currently integrates data from the following operational systems:
-* **CRM System:** Salesforce (customer details, sales opportunities)
-* **ERP System:** SAP (financial transactions, inventory, product catalog)
+* **CRM System:** customer details, sales opportunities
+* **ERP System:** financial transactions
 ---
 ## Data Model & Schema
 
